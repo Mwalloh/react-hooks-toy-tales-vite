@@ -1,7 +1,34 @@
-import React from "react";
+import React, { useState } from "react";
 import ToyCard from "./ToyCard";
 
 function ToyContainer({ toys, setToys }) {
+	function handleLikeToy(id) {
+		const currentToy = toys.filter((toy) => toy.id === id);
+
+		fetch(`http://localhost:3001/toys/${id}`, {
+			method: "PATCH",
+			headers: {
+				"Content-Type": "application/json",
+			},
+			body: JSON.stringify({ likes: currentToy[0].likes + 1 }),
+		})
+			.then((res) => {
+				if (!res.ok) {
+					throw new Error(
+						`An error of has occurred with status: ${res.status}`,
+					);
+				}
+				return res.json();
+			})
+			.then((data) => {
+				return setToys((prev) =>
+					prev.map((toy) =>
+						toy.id === data.id ? { ...toy, likes: data.likes } : toy,
+					),
+				);
+			})
+			.catch((error) => console.log(error));
+	}
 
 	function handleDeleteToy(id) {
 		fetch(`http://localhost:3001/toys/${id}`, {
@@ -30,6 +57,7 @@ function ToyContainer({ toys, setToys }) {
 						likes={toy.likes}
 						handleDeleteToy={handleDeleteToy}
 						toyId={toy.id}
+						handleLikeToy={handleLikeToy}
 					/>
 				);
 			})}
