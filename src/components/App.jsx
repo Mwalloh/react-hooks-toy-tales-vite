@@ -28,11 +28,11 @@ function App() {
 	return (
 		<>
 			<Header />
-			{showForm ? <ToyForm toys={toys} setToys={setToys}/> : null}
+			{showForm ? <ToyForm toys={toys} setToys={setToys} /> : null}
 			<div className="buttonContainer">
 				<button onClick={handleClick}>Add a Toy</button>
 			</div>
-			<ToyContainer toys={toys}/>
+			<ToyContainer toys={toys} setToys={setToys} />
 		</>
 	);
 }
